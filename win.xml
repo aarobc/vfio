@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain xmlns:qemu="http://libvirt.org/schemas/domain/qemu/1.0" type="kvm">
+    <name>gamingvm1</name>
+    <uuid>01bd2ed1-b465-4eba-b6e4-47c6ac8171c7</uuid>
+    <memory unit="GB">5</memory>
+    <currentMemory unit="GB">5</currentMemory>
+    <memoryBacking>
+        <locked />
+    </memoryBacking>
+    <cputune>
+        <vcpupin vcpu="0" cpuset="0"/>
+        <vcpupin vcpu="1" cpuset="1"/>
+        <vcpupin vcpu="2" cpuset="2"/>
+        <vcpupin vcpu="3" cpuset="3"/>
+        <vcpupin vcpu="4" cpuset="4"/>
+        <emulatorpin cpuset="0-4"/>
+    </cputune>
+    <vcpu placement="static">5</vcpu>
+    <cpu mode="host-passthrough">
+        <topology sockets="1" cores="5" threads="1" />
+    </cpu>
+    <!-- <vcpu placement="static">6</vcpu> -->
+    <!-- <cpu mode="host&#45;passthrough"> -->
+        <!--     <topology sockets="1" cores="3" threads="2" /> -->
+        <!-- </cpu> -->
+    <os>
+        <type arch="x86_64" machine="q35">hvm</type>
+        <!-- <loader>/usr/share/qemu/bios.bin</loader> -->
+        <loader>/home/ac/Documents/seabios/out/bios.bin</loader>
+        <bootmenu enable="yes" />
+    </os>
+    <features>
+        <hyperv>
+            <relaxed state="on" />
+            <vapic state="on" />
+            <spinlocks state="on" retries="8191" />
+        </hyperv>
+        <acpi />
+    </features>
+    <clock offset="localtime">
+        <timer name="hypervclock" present="yes" />
+    </clock>
+    <on_poweroff>destroy</on_poweroff>
+    <on_reboot>restart</on_reboot>
+    <on_crash>destroy</on_crash>
+    <devices>
+        <emulator>/usr/bin/qemu-system-x86_64</emulator>
+        <sound model='ich6'/>
+        <controller type="usb" index="0" />
+        <controller type="usb" index="1" />
+        <controller type="usb" index="2" />
+        <controller type="usb" index="3" />
+        <controller type="sata" index="0" />
+        <controller type="pci" index="0" model="pcie-root" />
+        <controller type="pci" index="1" model="dmi-to-pci-bridge" />
+        <controller type="pci" index="2" model="pci-bridge" />
+        <memballoon model="none" />
+        <sound model="ich6" />
+
+        <!-- <disk type="file" device="cdrom"> -->
+            <!--     <driver name="qemu" type="raw" /> -->
+            <!--     <source file="/home/ac/Downloads/Win10_English_x64.iso" /> -->
+            <!--     <target dev="hdc" bus="sata" /> -->
+            <!--     <target dev='vda' bus='virtio'/> -->
+            <!--     <readonly /> -->
+            <!--     <!&#45;&#45; <address type="drive" controller="1" bus="0" unit="0" /> &#45;&#45;> -->
+            <!--     <boot order='1'/> -->
+            <!-- </disk> -->
+
+
+        <!-- <disk type="file" device="cdrom"> -->
+            <!--     <driver name="qemu" type="raw" /> -->
+            <!--     <source file="/home/ac/Downloads/virtio&#45;win&#45;0.1.102.iso" /> -->
+            <!--     <!&#45;&#45; <target dev='vda' bus='virtio'/> &#45;&#45;> -->
+            <!--     <target dev="hdc" bus="sata" /> -->
+            <!--     <readonly /> -->
+            <!--     <address type="drive" controller="1" bus="0" unit="0" /> -->
+            <!-- </disk> -->
+
+
+
+        <disk type='file' device='disk'>
+            <driver name='qemu' type='raw' cache='none' io='native'/>
+            <source file="/home/ac/Documents/gameVM/windisk.img" />
+            <target dev='vda' bus='virtio'/>
+            <!-- <target dev="vda" bus="sata" /> -->
+            <!-- <address type="drive" bus="0" /> -->
+        </disk>
+
+        <disk type='block' device='disk'>
+            <driver name='qemu' type='raw'/>
+            <source dev='/dev/sdd'/>
+            <target dev='vdb' bus='virtio'/>
+        </disk>
+
+
+        <interface type='bridge'>
+            <mac address='52:54:00:a0:41:92'/>
+            <source bridge='br0'/>
+            <model type='virtio'/>
+            <!-- <model type='rtl8139'/> -->
+        </interface>
+
+        <!-- Sound adapter -->
+        <hostdev mode='subsystem' type='usb' managed='no'>
+            <source>
+                <vendor id='0x046d'/>
+                <product id='0x0a17'/>
+            </source>
+        </hostdev>
+
+        <!-- game controller -->
+        <hostdev mode='subsystem' type='usb' managed='no'>
+            <source>
+                <vendor id='0x045e'/>
+                <product id='0x028e'/>
+            </source>
+        </hostdev>
+
+    </devices>
+    <qemu:commandline>
+        <qemu:env name="QEMU_PA_SAMPLES" value="4096" />
+        <qemu:env name="QEMU_AUDIO_DRV" value="pa" />
+        <qemu:arg value="-device" />
+        <qemu:arg value="ioh3420,bus=pcie.0,addr=1c.0,multifunction=on,port=1,chassis=1,id=root.1" />
+        <qemu:arg value="-device" />
+        <qemu:arg value="vfio-pci,host=07:00.0,bus=root.1,addr=00.0,multifunction=on,x-vga=on" />
+        <qemu:arg value="-device" />
+        <qemu:arg value="vfio-pci,host=07:00.1,bus=root.1,addr=00.1" />
+        <qemu:arg value="-cpu" />
+        <qemu:arg value="host" />
+    </qemu:commandline>
+</domain>
