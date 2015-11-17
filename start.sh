@@ -1,5 +1,6 @@
 #!/bin/bash
 set -x
+xrandr --output HDMI-1 --off --screen 0
 virsh define win.xml
 modprobe vfio-pci
 modprobe kvm ignore_msrs=1
