@@ -1,6 +1,8 @@
 <hostdev mode='subsystem' type='usb' managed='no'>
 <source>
-<vendor id='0x046d'/>
-<product id='0x0a17'/>
+<!-- <vendor id='0x046d'/> -->
+<!-- <product id='0x0a17'/> -->
+<vendor id='0x1130'/>
+<product id='0x1620'/>
 </source>
 </hostdev>

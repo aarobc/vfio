@@ -1,7 +1,7 @@
 #!/bin/bash
-if [[ $(virsh list | grep gamingvm1) != "" ]]
+if [[ $(virsh list | grep gamingvm) != "" ]]
 then
-vm=gamingvm1
+vm=gamingvm
 fi
 
 virsh detach-device $vm mouse.xml
