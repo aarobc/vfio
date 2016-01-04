@@ -1,10 +1,11 @@
 #!/bin/bash
 set -x
 # xrandr --output HDMI-1 --off --screen 0
+xrandr --output DisplayPort-0 --off --screen 0
 
-# cset set -c 0-5 -s system
-# cset proc -m -f root -t system
-# cset proc -k -f root -t system
+cset set -c 6-11 -s system
+cset proc -m -f root -t system
+cset proc -k -f root -t system
 
 sudo cpupower -c 0-5 frequency-set -g performance
 
