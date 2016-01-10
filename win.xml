@@ -2,8 +2,8 @@
 <domain xmlns:qemu="http://libvirt.org/schemas/domain/qemu/1.0" type="kvm">
     <name>gamingvm</name>
     <uuid>01bd2ed1-b465-4eba-b6e4-47c6ac8171c6</uuid>
-    <memory unit="GB">6</memory>
-    <currentMemory unit="GB">6</currentMemory>
+    <memory unit="GB">10</memory>
+    <currentMemory unit="GB">10</currentMemory>
     <memoryBacking>
         <locked />
     </memoryBacking>
@@ -64,26 +64,34 @@
         <!-- </disk> -->
 
 
-        <!-- <disk type="file" device="cdrom"> -->
-        <!--         <driver name="qemu" type="raw" /> -->
-        <!--         <source file="/home/ac/Downloads/virtio&#45;win&#45;0.1.102.iso" /> -->
-        <!--         <!&#45;&#45; <target dev='vda' bus='virtio'/> &#45;&#45;> -->
-        <!--         <target dev="hdc" bus="sata" /> -->
-        <!--         <readonly /> -->
-        <!--         <address type="drive" controller="1" bus="0" unit="0" /> -->
-        <!--     </disk> -->
+        <disk type="file" device="cdrom">
+                <driver name="qemu" type="raw" />
+                <source file="/home/ac/Downloads/virtio-win-0.1.102.iso" />
+                <!-- <target dev='vda' bus='virtio'/> -->
+                <target dev="hdc" bus="sata" />
+                <readonly />
+                <address type="drive" controller="1" bus="0" unit="0" />
+            </disk>
 
 
 
         <!-- this one -->
         <disk type='file' device='disk'>
             <driver name='qemu' type='raw' cache='none' io='native'/>
-            <!-- <source file="/home/ac/Documents/gameVM/windisk.img" /> -->
-            <source file="/home/ac/Documents/gameVM/win8.img" />
+            <source file="/home/ac/Documents/gameVM/windisk.img" />
+            <!-- <source file="/home/ac/Documents/gameVM/win8.img" /> -->
             <!-- <target dev='vda' bus='virtio'/> -->
             <target dev="vda" bus="sata" />
             <address type="drive" bus="0" />
         </disk>
+
+        <!-- <disk type='file' device='disk'> -->
+        <!--     <driver name='qemu' type='raw' cache='none' io='native'/> -->
+        <!--     <source file="/home/ac/Documents/gameVM/win8.img" /> -->
+        <!--     <target dev='vda' bus='virtio'/> -->
+        <!--     <!&#45;&#45; <target dev="vda" bus="sata" /> &#45;&#45;> -->
+        <!--     <!&#45;&#45; <address type="drive" bus="0" /> &#45;&#45;> -->
+        <!-- </disk> -->
         <!--  -->
         <!-- <disk type='block' device='disk'> -->
         <!--     <driver name='qemu' type='raw'/> -->

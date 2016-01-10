@@ -6,8 +6,9 @@ xrandr --output DisplayPort-0 --off --screen 0
 cset set -c 6-11 -s system
 cset proc -m -f root -t system
 cset proc -k -f root -t system
+sudo -u ac synergy &
 
-sudo cpupower -c 0-5 frequency-set -g performance
+cpupower -c 0-5 frequency-set -g performance
 
 virsh define win.xml
 modprobe vfio-pci
