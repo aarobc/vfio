@@ -99,7 +99,8 @@
         <disk type='block' device='disk'>
             <driver name='qemu' type='raw'/>
             <source dev='/dev/sdd'/>
-            <target dev='vdb' bus='virtio'/>
+            <!-- <target dev='vdb' bus='virtio'/> -->
+            <target dev="vdb" bus="sata" />
             <boot order='1'/>
         </disk>
 
@@ -122,8 +123,13 @@
 
     </devices>
     <qemu:commandline>
-        <qemu:env name="QEMU_PA_SAMPLES" value="4096" />
+        <!-- <qemu:env name='QEMU_AUDIO_TIMER_PERIOD' value='500'/> -->
+        <qemu:env name='QEMU_PA_SAMPLES' value='4096'/>
+        <qemu:env name='PULSE_LATENCY_MSEC' value='30'/>
         <qemu:env name="QEMU_AUDIO_DRV" value="pa" />
+        <qemu:env name='QEMU_AUDIO_DAC_FIXED_FREQ' value='48000'/>
+        <qemu:env name='QEMU_AUDIO_ADC_FIXED_FREQ' value='48000'/>
+        <!-- <qemu:env name='QEMU_PA_SERVER' value='/run/user/1000/pulse/native'/> -->
 
         <qemu:arg value="-device" />
         <qemu:arg value="ioh3420,bus=pcie.0,addr=1c.0,multifunction=on,port=1,chassis=1,id=root.1" />

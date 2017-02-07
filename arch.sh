@@ -3,10 +3,10 @@
 #systemctl enable libvirtd.service
 
 virsh define win.xml
-cset set -c 6-11 -s system
-cset proc -m -f root -t system
-cset proc -k -f root -t system
-cpupower -c 0-5 frequency-set -g performance
+# cset set -c 6-11 -s system
+# cset proc -m -f root -t system
+# cset proc -k -f root -t system
+# cpupower -c 0-5 frequency-set -g performance
 
 if [[ $EUID -ne 0 ]]; then
   echo "This script must be run as root" 1>&2
