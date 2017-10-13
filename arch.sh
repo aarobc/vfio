@@ -1,6 +1,7 @@
 #!/bin/bash
 
 #systemctl enable libvirtd.service
+# ./setupNet.sh
 
 virsh define win.xml
 # cset set -c 6-11 -s system
@@ -26,4 +27,6 @@ fi
 
 set +x
 
+sleep 2
+./attach.sh
 exit 0

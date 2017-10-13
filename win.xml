@@ -93,7 +93,8 @@
         <disk type='block' device='disk'>
             <driver name='qemu' type='raw'/>
             <source dev='/dev/sda'/>
-            <target dev='vdc' bus='virtio'/>
+            <!-- <target dev='vdb' bus='virtio'/> -->
+            <target dev="vdc" bus="sata" />
         </disk>
 
         <disk type='block' device='disk'>
@@ -107,7 +108,7 @@
 
 
         <interface type='direct'>
-          <!-- <source dev='eth0' mode='bridge'/> -->
+          <!-- <source dev='eno1' mode='passthrough'/> -->
           <source dev='enp7s0' mode='bridge'/>
           <!-- <mac address='52:54:00:a0:41:92'/> -->
         </interface>
