@@ -40,8 +40,14 @@
     <on_poweroff>destroy</on_poweroff>
     <on_reboot>restart</on_reboot>
     <on_crash>destroy</on_crash>
+    <!-- suspend stuff that doesn't work -->
+    <pm>
+      <suspend-to-mem enabled='yes'/>
+      <suspend-to-disk enabled='yes'/>
+    </pm>
     <devices>
         <emulator>/usr/bin/qemu-system-x86_64</emulator>
+        <emulator>/opt/qemu-test/bin/qemu-system-x86_64</emulator>
         <sound model='ich6'/>
         <controller type="usb" index="0" />
         <controller type="usb" index="1" />
@@ -54,39 +60,6 @@
         <controller type="pci" index="2" model="pci-bridge" />
         <memballoon model="none" />
 
-        <!-- os boot disk -->
-        <!-- <disk type="file" device="cdrom"> -->
-        <!--     <driver name="qemu" type="raw" /> -->
-        <!--     <!&#45;&#45; <source file="/home/ac/Documents/gameVM/Win8.1_English_x64.iso" /> &#45;&#45;> -->
-        <!--     <source file="/home/ac/Documents/gameVM/Win10_English_x64.iso" /> -->
-        <!--     <target dev="hdc" bus="sata" /> -->
-        <!--     <readonly /> -->
-        <!--     <!&#45;&#45; <address type="drive" controller="1" bus="0" unit="0" /> &#45;&#45;> -->
-        <!--     <boot order='1'/> -->
-        <!-- </disk> -->
-
-
-        <!-- virtio drivers -->
-      <!-- <disk type="file" device="cdrom"> -->
-      <!--   <driver name="qemu" type="raw" /> -->
-      <!--   <source file="/home/ac/Documents/gameVM/virtio&#45;win.iso" /> -->
-      <!--   <!&#45;&#45; <target dev='vda' bus='virtio'/> &#45;&#45;> -->
-      <!--   <target dev="hdd" bus="sata" /> -->
-      <!--   <readonly /> -->
-      <!--   <!&#45;&#45; <address type="drive" controller="1" bus="0" unit="0" /> &#45;&#45;> -->
-      <!-- </disk> -->
-
-
-
-        <!-- OS disk -->
-        <!-- <disk type='file' device='disk'> -->
-        <!--     <driver name='qemu' type='raw' cache='none' io='native'/> -->
-        <!--     <source file="/home/ac/Documents/gameVM/windisk.img" /> -->
-        <!--     <!&#45;&#45; <target dev='vda' bus='virtio'/> &#45;&#45;> -->
-        <!--     <target dev="vda" bus="sata" /> -->
-        <!--     <!&#45;&#45; <address type="drive" bus="0" /> &#45;&#45;> -->
-        <!--     <address type="drive" /> -->
-        <!-- </disk> -->
 
 
         <!-- storage disk, physical drive -->
@@ -99,7 +72,7 @@
 
         <disk type='block' device='disk'>
             <driver name='qemu' type='raw'/>
-            <source dev='/dev/sdd'/>
+            <source dev='/dev/sdb'/>
             <!-- <target dev='vdb' bus='virtio'/> -->
             <target dev="vdb" bus="sata" />
             <boot order='1'/>
@@ -107,39 +80,58 @@
 
 
 
+        <!-- the network device -->
         <interface type='direct'>
           <!-- <source dev='eno1' mode='passthrough'/> -->
-          <source dev='enp7s0' mode='bridge'/>
+          <source dev='enp5s0' mode='passthrough'/>
+            <model type='e1000'/>
+          <!-- <source dev='enp7s0' mode='bridge'/> -->
           <!-- <mac address='52:54:00:a0:41:92'/> -->
         </interface>
+
+        <!-- the usb controller -->
+        <hostdev mode='subsystem' type='pci' managed='yes'>
+          <driver name='vfio'/>
+          <source>
+            <address domain='0x0000' bus='0x06' slot='0x00' function='0x0'/>
+          </source>
+        </hostdev>
+
+
+        <!-- for quemu&#45;agent -->
+        <!-- <channel type='unix'> -->
+        <!--   <source mode='bind'/> -->
+        <!--   <target type='virtio' name='org.qemu.guest_agent.0'/> -->
+        <!-- </channel> -->
 
         <!-- <interface type='bridge'> -->
         <!--     <mac address='52:54:00:a0:41:92'/> -->
         <!--     <!&#45;&#45; <source bridge='br0'/> &#45;&#45;> -->
         <!--     <source bridge='virbr0'/> -->
         <!--     <model type='virtio'/> -->
-        <!--     <!&#45;&#45; <model type='rtl8139'/> &#45;&#45;> -->
+        <!--     <model type='rtl8139'/> -->
         <!-- </interface> -->
 
 
     </devices>
     <qemu:commandline>
-        <!-- <qemu:env name='QEMU_AUDIO_TIMER_PERIOD' value='500'/> -->
+        <!-- microphone delay fix attempt -->
+        <!-- commented out because it doesn't work, and causes audio to cracle (supposedly) -->
+        <!-- <qemu:env name='QEMU_AUDIO_TIMER_PERIOD' value='200'/> -->
+
         <qemu:env name='QEMU_PA_SAMPLES' value='4096'/>
         <qemu:env name='PULSE_LATENCY_MSEC' value='30'/>
         <qemu:env name="QEMU_AUDIO_DRV" value="pa" />
-        <qemu:env name='QEMU_AUDIO_DAC_FIXED_FREQ' value='48000'/>
-        <qemu:env name='QEMU_AUDIO_ADC_FIXED_FREQ' value='48000'/>
+        <!-- <qemu:env name='QEMU_AUDIO_DAC_FIXED_FREQ' value='48000'/> -->
+        <!-- <qemu:env name='QEMU_AUDIO_ADC_FIXED_FREQ' value='48000'/> -->
         <!-- <qemu:env name='QEMU_PA_SERVER' value='/run/user/1000/pulse/native'/> -->
 
         <qemu:arg value="-device" />
         <qemu:arg value="ioh3420,bus=pcie.0,addr=1c.0,multifunction=on,port=1,chassis=1,id=root.1" />
 
+        <!-- the display -->
         <qemu:arg value="-device" />
-        <qemu:arg value="vfio-pci,host=05:00.0,bus=root.1,addr=00.0,multifunction=on,x-vga=on" />
-
-        <!-- <qemu:arg value="&#45;device" /> -->
-        <!-- <qemu:arg value="vfio&#45;pci,host=05:00.1,bus=root.1,addr=00.1" /> -->
+        <qemu:arg value="vfio-pci,host=01:00.0,bus=root.1,addr=00.0,multifunction=on,x-vga=on" />
 
         <qemu:arg value="-cpu" />
         <qemu:arg value="host" />

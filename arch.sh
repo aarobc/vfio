@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -xe
 
 #systemctl enable libvirtd.service
 # ./setupNet.sh
@@ -15,7 +15,7 @@ if [[ $EUID -ne 0 ]]; then
   exit 0
 fi
 
-set -x
+# export QEMU_AUDIO_DRV=alsa
 
 echo 1 > /sys/module/kvm/parameters/ignore_msrs
 virsh start gamingvm
@@ -25,8 +25,7 @@ then
   exit 0
 fi
 
-set +x
 
-sleep 2
-./attach.sh
-exit 0
+# sleep 2
+# ./attach.sh
+# exit 0
